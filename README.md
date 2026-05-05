@@ -24,7 +24,7 @@ cd ecommerce && java -cp bin App
 
 ## :construction_worker: Arquitectura
 
-Arquitectura multicapa bajo el paquete `com.techlab`:
+Arquitectura multicapa:
 
 ```
                     ┌─────────────────────────────────────────────────────────┐
@@ -168,7 +168,6 @@ ecommerce/
 ├── bin/                         📁 Archivos .class compilados
 ├── src/
 │   ├── App.java                🚪 Punto de entrada
-│   └── com/techlab/
 │       ├── productos/
 │       │    ├── Producto.java       📦 Clase abstracta
 │       │    ├── Bebida.java        🍹 Producto bebida
