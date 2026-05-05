@@ -1,18 +1,218 @@
-## Getting Started
+# :shopping_cart: Ecommerce - Sistema de Gestion de Productos y Pedidos
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+> Aplicacion de consola en Java para gestionar un pequeno sistema de ecommerce: administracion de productos (bebidas, comidas) y procesamiento de pedidos.
 
-## Folder Structure
+---
 
-The workspace contains two folders by default, where:
+## :rocket: Requisitos
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- :coffee: **Java 11+** installed
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+---
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## :cd: Compilacion y Ejecucion
 
-## Dependency Management
+```bash
+# Compilar
+cd ecommerce && javac -d bin src/**/*.java src/*.java
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+# Ejecutar
+cd ecommerce && java -cp bin App
+```
+
+---
+
+## :construction_worker: Arquitectura
+
+Arquitectura multicapa bajo el paquete `com.techlab`:
+
+```
+                    ┌─────────────────────────────────────────────────────────┐
+                    │                    PRESENTACION                          │
+                    │                      Main.java                          │
+                    │              (menu e interaccion con usuario)            │
+                    └─────────────────────────────────────────────────────────┘
+                                        │  │
+                                        ▼  │
+                    ┌─────────────────────────────────────────────────────────┐
+                    │                     SERVICIOS                            │
+                    │         ProductoService      │     PedidoService         │
+                    │    (logica de negocio)      │   (logica de negocio)     │
+                    └─────────────────────────────────────────────────────────┘
+                                        │  │
+                                        ▼  │
+                    ┌─────────────────────────────────────────────────────────┐
+                    │                      MODELOS                             │
+                    │   Producto  │  Bebida  │  Comida  │  Pedido  │ LineaPedido
+                    └─────────────────────────────────────────────────────────┘
+                                        │  │
+                                        ▼  │
+                    ┌─────────────────────────────────────────────────────────┐
+                    │                    EXCEPCIONES                           │
+                    │              StockInsuficienteException                  │
+                    └─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## :uml: Diagrama de Clases
+
+```
+                    ┌─────────────────────────────────┐
+                    │         «abstract»               │
+                    │          Producto               │
+                    ├─────────────────────────────────┤
+                    │ - id: int                       │
+                    │ - nombre: String                │
+                    │ - precio: double                │
+                    │ - stock: int                     │
+                    ├─────────────────────────────────┤
+                    │ + getId(): int                  │
+                    │ + getNombre(): String           │
+                    │ + getPrecio(): double            │
+                    │ + getStock(): int               │
+                    │ + setStock(int): void           │
+                    │ + «abstract» toString()        │
+                    └───────────────┬─────────────────┘
+                                    │
+                        ┌───────────┴───────────┐
+                        │                       │
+                        ▼                       ▼
+                ┌───────────────┐       ┌───────────────┐
+                │    Bebida     │       │    Comida     │
+                └───────────────┘       └───────────────┘
+
+                ┌──────────────────────────────────────────────────────────┐
+                │                         Pedido                             │
+                ├──────────────────────────────────────────────────────────┤
+                │ - id: int                                                │
+                │ - lineas: List<LineaPedido>                              │
+                │ - fecha: LocalDateTime                                   │
+                ├──────────────────────────────────────────────────────────┤
+                │ + agregarLinea(producto, cantidad): void                │
+                │ + calcularTotal(): double                               │
+                │ + toString(): String                                    │
+                └──────────────────────────────────────────────────────────┘
+
+                ┌──────────────────────────────────────────────────────────┐
+                │                      LineaPedido                          │
+                ├──────────────────────────────────────────────────────────┤
+                │ - producto: Producto                                      │
+                │ - cantidad: int                                         │
+                ├──────────────────────────────────────────────────────────┤
+                │ + getProducto(): Producto                                │
+                │ + getCantidad(): int                                    │
+                │ + getSubtotal(): double                                  │
+                └──────────────────────────────────────────────────────────┘
+```
+
+---
+
+## :arrows_counterclockwise: Flujo de Pedidos
+
+```
+    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+    │    Menu      │───▶│  Seleccionar │───▶│   Ingresar    │
+    │   Principal  │    │   opcion 5   │    │  ID producto │
+    └──────────────┘    └──────────────┘    └──────────────┘
+                                              │
+                                              ▼
+                                     ┌──────────────┐
+                                     │   Ingresar    │
+                                     │   cantidad    │
+                                     └──────────────┘
+                                              │
+                                              ▼
+                             ┌────────────────────────────────┐
+                             │     ¿Stock suficiente?         │
+                             └────────────────────────────────┘
+                                    │              │
+                                   NO             YES
+                                    │              │
+                                    ▼              ▼
+                          ┌──────────────┐  ┌──────────────┐
+                          │   Mostrar    │  │   Mostrar     │
+                          │    error     │  │   subtotal    │
+                          └──────────────┘  └──────────────┘
+                                                    │
+                                                    ▼
+                                           ┌──────────────┐
+                                           │  ¿Agregar    │
+                                           │  mas items?  │◀────+
+                                           └──────────────┘     │
+                                                 │   │            │
+                                                SI  NO           │
+                                                 │   │            │
+                                                 └───┘            │
+                                              (loop)              │
+                                                    │            │
+                                                    ▼            │
+                                          ┌──────────────┐       │
+                                          │   Confirmar   │       │
+                                          │    pedido      │       │
+                                          └──────────────┘       │
+                                                    │            │
+                                                    ▼            │
+                                          ┌──────────────┐       │
+                                          │  Decrementar  │──────┘
+                                          │    stock      │
+                                          └──────────────┘
+```
+
+---
+
+## :file_folder: Estructura de Carpetas
+
+```
+ecommerce/
+├── bin/                         📁 Archivos .class compilados
+├── src/
+│   ├── App.java                🚪 Punto de entrada
+│   └── com/techlab/
+│       ├── productos/
+│       │    ├── Producto.java       📦 Clase abstracta
+│       │    ├── Bebida.java        🍹 Producto bebida
+│       │    └── Comida.java        🍔 Producto comida
+│       ├── pedidos/
+│       │    ├── Pedido.java         📋 Cabecera del pedido
+│       │    └── LineaPedido.java    📝 Linea de pedido
+│       ├── services/
+│       │    ├── ProductoService.java    🔧 CRUD productos
+│       │    └── PedidoService.java      🔧 Logica pedidos
+│       ├── exceptions/
+│       │    └── StockInsuficienteException.java  ⚠️ Excepcion
+│       └── app/
+│            └── Main.java           🖥️ Menu de consola
+└── README.md
+```
+
+---
+
+## :clipboard: Menu de Consola
+
+```
+  ┌────────────────────────────────────────┐
+  │           MENU PRINCIPAL               │
+  ├────────────────────────────────────────┤
+  │  1️⃣  Agregar producto                 │
+  │  2️⃣  Listar productos                 │
+  │  3️⃣  Buscar/Actualizar producto       │
+  │  4️⃣  Eliminar producto                │
+  │  5️⃣  Crear pedido                      │
+  │  6️⃣  Listar pedidos                    │
+  │  7️⃣  Salir                             │
+  └────────────────────────────────────────┘
+```
+
+---
+
+## :bookmark_tabs: Reglas de Negocio
+
+| Regla | Descripcion |
+|-------|-------------|
+| :package: **Stock** | No puede ser negativo. Si un pedido requiere mas stock del disponible, se lanza `StockInsuficienteException`. |
+| :dollar: **Precio** | Debe ser mayor a 0. |
+| :shopping_cart: **Pedido** | Al confirmarse, decrementa el stock de cada producto involucrado. |
+| :chart: **Total** | Se calcula como la suma de `(precio * cantidad)` de todas las lineas. |
+
+---
