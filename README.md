@@ -168,20 +168,20 @@ ecommerce/
 ├── bin/                         📁 Archivos .class compilados
 ├── src/
 │   ├── App.java                🚪 Punto de entrada
-│       ├── productos/
-│       │    ├── Producto.java       📦 Clase abstracta
-│       │    ├── Bebida.java        🍹 Producto bebida
-│       │    └── Comida.java        🍔 Producto comida
-│       ├── pedidos/
-│       │    ├── Pedido.java         📋 Cabecera del pedido
-│       │    └── LineaPedido.java    📝 Linea de pedido
-│       ├── services/
-│       │    ├── ProductoService.java    🔧 CRUD productos
-│       │    └── PedidoService.java      🔧 Logica pedidos
-│       ├── exceptions/
-│       │    └── StockInsuficienteException.java  ⚠️ Excepcion
-│       └── app/
-│            └── Main.java           🖥️ Menu de consola
+│   ├── productos/
+│   │    ├── Producto.java       📦 Clase abstracta
+│   │    ├── Bebida.java        🍹 Producto bebida
+│   │    └── Comida.java        🍔 Producto comida
+│   ├── pedidos/
+│   │    ├── Pedido.java         📋 Cabecera del pedido
+│   │    └── LineaPedido.java    📝 Linea de pedido
+│   ├── services/
+│   │    ├── ProductoService.java    🔧 CRUD productos
+│   │    └── PedidoService.java      🔧 Logica pedidos
+│   ├── exceptions/
+│   │    └── StockInsuficienteException.java  ⚠️ Excepcion
+│   └── app/
+│        └── Main.java           🖥️ Menu de consola
 └── README.md
 ```
 
