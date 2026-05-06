@@ -26,7 +26,7 @@ cd ecommerce && java -cp bin App
 
 Arquitectura multicapa:
 
-```
+```plantuml
                     ┌─────────────────────────────────────────────────────────┐
                     │                    PRESENTACION                          │
                     │                      Main.java                          │
@@ -57,7 +57,7 @@ Arquitectura multicapa:
 
 ## :uml: Diagrama de Clases
 
-```
+```plantuml
                     ┌─────────────────────────────────┐
                     │         «abstract»               │
                     │          Producto               │
@@ -110,7 +110,7 @@ Arquitectura multicapa:
 
 ## :arrows_counterclockwise: Flujo de Pedidos
 
-```
+```plantuml
     ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
     │    Menu      │───▶│  Seleccionar │───▶│   Ingresar    │
     │   Principal  │    │   opcion 5   │    │  ID producto │
@@ -163,7 +163,7 @@ Arquitectura multicapa:
 
 ## :file_folder: Estructura de Carpetas
 
-```
+```plantuml
 ecommerce/
 ├── bin/                         📁 Archivos .class compilados
 ├── src/
@@ -189,7 +189,7 @@ ecommerce/
 
 ## :clipboard: Menu de Consola
 
-```
+```plantuml
   ┌────────────────────────────────────────┐
   │           MENU PRINCIPAL               │
   ├────────────────────────────────────────┤
@@ -208,7 +208,7 @@ ecommerce/
 ## :bookmark_tabs: Reglas de Negocio
 
 | Regla | Descripcion |
-|-------|-------------|
+| ----- | ----------- |
 | :package: **Stock** | No puede ser negativo. Si un pedido requiere mas stock del disponible, se lanza `StockInsuficienteException`. |
 | :dollar: **Precio** | Debe ser mayor a 0. |
 | :shopping_cart: **Pedido** | Al confirmarse, decrementa el stock de cada producto involucrado. |
